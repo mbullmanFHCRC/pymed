@@ -96,7 +96,6 @@ class PubMedArticle(object):
         path = ".//Journal/Title"
         return getContent(element=xml_element, path=path)
 
-
     def _extractJournalShortname(self: object, xml_element: TypeVar("Element")) -> str:
         path = ".//Journal/ISOAbbreviation"
         return getContent(element=xml_element, path=path)
