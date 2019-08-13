@@ -48,6 +48,15 @@ class PubMed(object):
         # Define the standard / default query parameters
         self.parameters = {"tool": tool, "email": email, "db": "pubmed"}
 
+    def fromXMLFile(self: object, path: str):
+        with open(path, 'r') as xmlfile:
+            xmlstr = xmlfile.read()
+            clean_xml = re.sub(r'<i>|</i>|<b>|</b>', '', xmlstr)
+            root = xml.fromstring(clean_xml)
+            return PubMedArticle(xml_element=root)
+            # for article in root.iter("PubmedArticle"):
+            #    yield PubMedArticle(xml_element=article)
+
     def query(self: object, query: str, max_results: int = 100):
         """ Method that executes a query agains the GraphQL schema, automatically
             inserting the PubMed data loader.
