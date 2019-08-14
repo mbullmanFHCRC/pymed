@@ -51,7 +51,7 @@ class PubMed(object):
     def fromXMLFile(self: object, path: str):
         with open(path, 'r') as xmlfile:
             xmlstr = xmlfile.read()
-            clean_xml = re.sub(r'<i>|</i>|<b>|</b>', '', xmlstr)
+            clean_xml = self._cleanXML(xmlstr)
             root = xml.fromstring(clean_xml)
             return PubMedArticle(xml_element=root)
             # for article in root.iter("PubmedArticle"):
@@ -108,6 +108,10 @@ class PubMed(object):
 
         # Return the total number of results (without retrieving them)
         return total_results_count
+
+    def _cleanXML(self: object, raw_string: str) -> str:
+        clean_string = re.sub(r'<i>|</i>|<b>|</b>', '', raw_string)
+        return clean_string
 
     def _exceededRateLimit(self) -> bool:
         """ Helper method to check if we've exceeded the rate limit.
@@ -182,7 +186,7 @@ class PubMed(object):
         )
 
         # Parse as XML
-        response = re.sub(r'<i>|</i>|<b>|</b>', '', response)
+        response = self._cleanXML(response)
         root = xml.fromstring(response)
 
         # Loop over the articles and construct article objects
