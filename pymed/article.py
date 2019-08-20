@@ -19,6 +19,7 @@ class PubMedArticle(object):
         "pubmed_id",
         "title",
         "abstract",
+        "abstract_list",
         "keywords",
         "mesh_headings",
         "journal",
@@ -107,6 +108,10 @@ class PubMedArticle(object):
     def _extractAbstract(self: object, xml_element: TypeVar("Element")) -> str:
         path = ".//AbstractText"
         return getContent(element=xml_element, path=path)
+
+    def _extractAbstractList(self: object, xml_element: TypeVar("Element")) -> list:
+        path = ".//Abstract"
+        return getContentList(xml_element, path, None)
 
     def _extractConclusions(self: object, xml_element: TypeVar("Element")) -> str:
         path = ".//AbstractText[@Label='CONCLUSION']"
@@ -327,6 +332,7 @@ class PubMedArticle(object):
         self.issue_number = self._extractIssueNumber(xml_element)
         self.issns = self._extractISSNs(xml_element)
         self.abstract = self._extractAbstract(xml_element)
+        self.abstract_list = self._extractAbstractList(xml_element)
         self.conclusions = self._extractConclusions(xml_element)
         self.methods = self._extractMethods(xml_element)
         self.results = self._extractResults(xml_element)

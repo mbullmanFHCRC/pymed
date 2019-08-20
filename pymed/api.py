@@ -110,7 +110,7 @@ class PubMed(object):
         return total_results_count
 
     def _cleanXML(self: object, raw_string: str) -> str:
-        clean_string = re.sub(r'<i>|</i>|<b>|</b>', '', raw_string)
+        clean_string = re.sub(r'<i>|</i>|<b>|</b>|<sub>|</sub>', '', raw_string)
         return clean_string
 
     def _exceededRateLimit(self) -> bool:
