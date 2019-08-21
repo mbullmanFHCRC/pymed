@@ -9,7 +9,7 @@ from typing import Union
 
 from .helpers import getContent
 from .helpers import getContentList
-
+from .helpers import getSingleContent
 
 class PubMedArticle(object):
     """ Data class that contains a PubMed article.
@@ -67,7 +67,7 @@ class PubMedArticle(object):
         return "PubmedArticle"
 
     def _extractPubMedId(self: object, xml_element: TypeVar("Element")) -> str:
-        path = ".//PMID"
+        path = "./MedlineCitation/PMID"
         return getContent(element=xml_element, path=path)
 
     def _extractTitle(self: object, xml_element: TypeVar("Element")) -> str:
@@ -98,7 +98,7 @@ class PubMedArticle(object):
         return getContent(element=xml_element, path=path)
 
     def _extractJournalShortname(self: object, xml_element: TypeVar("Element")) -> str:
-        path = ".//Journal/ISOAbbreviation"
+        path = ".//MedlineJournalInfo/MedlineTA"
         return getContent(element=xml_element, path=path)
 
     def _extractPages(self: object, xml_element: TypeVar("Element")) -> str:
