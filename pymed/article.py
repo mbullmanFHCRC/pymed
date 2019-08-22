@@ -9,7 +9,7 @@ from typing import Union
 
 from .helpers import getContent
 from .helpers import getContentList
-from .helpers import getSingleContent
+
 
 class PubMedArticle(object):
     """ Data class that contains a PubMed article.
@@ -270,7 +270,7 @@ class PubMedArticle(object):
         try:
 
             # Get the publication elements
-            publication_date = xml_element.find(".//PubMedPubDate[@PubStatus='pubmed']")
+            publication_date = xml_element.find(".//PubMedPubDate[@PubStatus='entrez']")
             publication_year = int(getContent(publication_date, ".//Year", None))
             publication_month = int(getContent(publication_date, ".//Month", "1"))
             publication_day = int(getContent(publication_date, ".//Day", "1"))
