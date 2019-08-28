@@ -162,8 +162,8 @@ class PubMedArticle(object):
         try:
             return int(getContent(element=xml_element, path=path))
         except Exception as e:
-            print('line112')
-            print(e)
+            # print('line112')
+            # print(e)
             return None
 
     def _extractVolume(self: object, xml_element: TypeVar("Element")) -> Optional[int]:
@@ -171,8 +171,8 @@ class PubMedArticle(object):
         try:
             return int(getContent(element=xml_element, path=path))
         except Exception as e:
-            print('line161')
-            print(e)
+            # print('line161')
+            # print(e)
             return None
 
     def _extractPubDate(self: object, xml_element: TypeVar("Element")) -> Union[TypeVar("datetime.datetime"), TypeVar("str")]:
@@ -181,34 +181,34 @@ class PubMedArticle(object):
         try:
             pubDate = xml_element.find(".//PubDate")
         except Exception as e:
-            print(e)
-            print('No PubDate')
+            # print(e)
+            # print('No PubDate')
             return None
         try:
             publication_year = getContent(pubDate, ".//Year", None)
         # try to extract the year from the pubDate field
         except Exception as e:
-            print(e)
-            print("No Pubdate Year")
+            # print(e)
+            # print("No Pubdate Year")
             # I'm thinking if the year doesn't exist that we should just drop the whole thing
             return None
         try:
             publication_month = getContent(pubDate, ".//Month", "1")
         except Exception as e:
-            print(e)
-            print("Issues with Pubdate Month")
+            # print(e)
+            # print("Issues with Pubdate Month")
             pass
         try:
             publication_day = getContent(pubDate, ".//Day", "1")
         except Exception as e:
-            print(e)
-            print("Date/Day error")
+            # print(e)
+            # print("Date/Day error")
             pass
         try:
             publication_season = getContent(pubDate, ".//Season", None)
         except Exception as e:
-            print(e)
-            print("Season likely does not exist")
+            # print(e)
+            # print("Season likely does not exist")
             pass
 
         # now let's try to create a datetime object from several different potential date formats
@@ -224,8 +224,8 @@ class PubMedArticle(object):
                 date_string, "%Y-%b-%d"
             )
         except Exception as e:
-            print(e)
-            print("Likely missing month or day")
+            # print(e)
+            # print("Likely missing month or day")
             pass
         # try with only year and abbreviated month
         try:
@@ -234,33 +234,33 @@ class PubMedArticle(object):
                 date_string, "%Y-%b"
             )
         except Exception as e:
-            print(e)
+            # print(e)
             pass
         try:
             # assume the month is a number, but has no day component
             date_string = publication_year + '-' + publication_month
             return datetime.datetime.strptime(date_string, "%Y-%m")
         except Exception as e:
-            print(e)
+            # print(e)
             pass
         try:
             # assume the month is a number, but has no day component
             date_string = publication_year + '-' + publication_month + '-' + publication_day
             return datetime.datetime.strptime(date_string, "%Y-%m-%d")
         except Exception as e:
-            print(e)
+            # print(e)
             pass
         try:
             medlineDateStr = getContent(element=xml_element, path=".//PubDate/MedlineDate")
             return medlineDateStr
         except Exception as e:
-            print(e)
+            # print(e)
             pass
         try:
             date_string = publication_year + '-' + publication_season
             return date_string
         except Exception as e:
-            print(e)
+            # print(e)
             return None
 
     def _extractPublicationDate(
@@ -282,7 +282,7 @@ class PubMedArticle(object):
 
         # Unable to parse the datetime
         except Exception as e:
-            print(e)
+            # print(e)
             return None
 
     def _extractAuthors(self: object, xml_element: TypeVar("Element")) -> list:
@@ -290,13 +290,13 @@ class PubMedArticle(object):
         pattern = re.compile("(https?://orcid.org/)([0-9]{4}-[0-9]{4}-[0-9]{4}-[0-9]{3}[0-9]{1}|[0-9]{4}-[0-9]{4}-[0-9]{4}-[0-9]{3}X)")
         authors = []
         for author in xml_element.findall(".//Author"):
-            print(getContent(author, ".//Identifier", None))
+            # print(getContent(author, ".//Identifier", None))
             if getContent(author, ".//Identifier", None):
                 try:
                     orcid = re.match(pattern, getContent(author, ".//Identifier", None))[2]
                 except Exception as e:
-                    print(e)
-                    print(getContent(author, ".//Identifier"))
+                    # print(e)
+                    # print(getContent(author, ".//Identifier"))
                     orcid = None
             else:
                 orcid = None
@@ -312,7 +312,7 @@ class PubMedArticle(object):
     def _extractISSNs(self: object, xml_element: TypeVar("Element")) -> dict:
         return {
                 "eISSN": getContent(xml_element, ".//ISSN[@IssnType='Electronic']", None),
-                "ISSN": getContent(xml_element, ".//ISSN[@IssnType='Print']", None),
+                "ISSN": getContent(xml_element, ".//ISSN[@IssnType='# print']", None),
                 "ISSNLinking": getContent(xml_element, ".//ISSNLinking", None)
         }
 
